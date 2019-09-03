@@ -1,0 +1,533 @@
+---
+title: "Data visualisation in R with ggplot"
+author: "Fernando Cagua"
+date: "September 4, 2019"
+output:
+  revealjs::revealjs_presentation:
+    theme: white
+    transition: fade
+    css: custom.css
+    center: true
+    self_contained: false
+    reveal_options:
+      slideNumber: true
+      previewLinks: true
+---
+
+```{r}
+knitr::opts_chunk$set(fig.height=4, 
+                      cache = TRUE)
+```
+
+# Why? 
+
+## Figures in R? 
+
+- Keep analysis and figures together
+- Versatile
+
+## Figures with ggplot?
+
+> - Very powerful
+> - Same "grammar" for many different kinds of plots
+> - Polished graphs (publications, presentations, reports)
+> - Many users = easy to get help
+
+# What?
+
+## 
+
+- **Ask questions. Anytime. Really!**
+- Work with your buddy
+
+##
+
+- This is an intermediate workshop
+- Assumes working knowledge of R
+- Relatively fast-paced
+
+<!-- ## Goal -->
+
+# How?
+
+## 
+
+1. Explain the basics components
+2. Build knowledge through **examples**
+
+# The grammar of graphics
+
+##
+
+The idea behind a "grammar" for doing graphs is that **Every plot can be built with the same components** 
+
+##
+
+![Layers of the grammar of graphics](slide-figures/grammar-of-graphics-layers.png)
+
+## 
+
+We need to specify at least:
+
+> - The **data**
+> - A mapping of **aes**thetics that translates data to visual variables (position, color, size, ...)
+> - A **geom**etry that describes the visual marks used to represent the data (points, lines, bars, ...)
+
+## How it looks like
+
+```{r eval=FALSE}
+ggplot(data = <MY DATA>) +
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+Have a look at your cheatsheet!
+
+# Bar charts
+
+## The diamonds data set
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+```{r}
+library(tidyverse)
+diamonds
+```
+
+## Our first plot
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")
+```
+
+##
+
+```{r}
+ggplot(data = diamonds)
+```
+
+##
+
+```{r}
+ggplot(data = diamonds, 
+       mapping = aes(x = cut))
+```
+
+##
+
+```{r, eval = T}
+ggplot(data = diamonds, 
+       mapping = aes(x = cut)) +
+  geom_bar()
+```
+
+## 
+
+<div class="container">
+<div class="col">
+```{r, fig.width=5, fig.height=5}
+ggplot(data = diamonds, 
+       mapping = aes(x = cut)) +
+  geom_bar()
+```
+</div>
+<div class="col">
+```{r, fig.width=5, fig.height=5}
+## mappings can go on each geom
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))
+```
+</div>
+</div>
+
+## 
+
+give it a try yourself!
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut))
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, colour = cut))
+```
+
+##
+
+```{r, echo = TRUE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut))
+```
+
+##
+
+Remember the plot we're trying to do:
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")
+```
+
+## 
+
+**position adjustments** 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), 
+           position = "stack")
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), 
+           position = "fill")
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), 
+           position = "identity") # no ajdustment
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), 
+           position = "dodge") 
+```
+
+##
+
+Yay!
+
+![Yay](slide-figures/yay-1.gif)
+
+##
+
+Let's have a look at facets now
+
+![Layers of the grammar of graphics](slide-figures/grammar-of-graphics-layers.png)
+
+## Facets
+
+Facets divide a plot into subplots based on the values of one or more discrete variables
+
+```{r, eval = FALSE}
+ggplot(data = <MY DATA>) +
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>)) +
+  <FACET_FUNCTION>(<VARIABLES>)
+```
+
+## Two faceting functions
+
+> - `facet_grid()`
+> - `facet_wrap()`
+
+Have a look at your cheat-sheet to see how they work!
+
+## Our second plot
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = color, fill = cut)) +
+  facet_wrap(vars(cut))
+```
+
+## 
+
+Let's start with `facet_grid()`
+
+It requires **columns** and/or **rows**
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = color, fill = cut)) +
+  facet_grid(cols = vars(cut))
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = color, fill = cut)) +
+  facet_grid(rows = vars(cut))
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = color, fill = cut)) +
+  facet_grid(cols = vars(cut), rows = vars(clarity))
+```
+
+## 
+
+Our target plot requires `facet_grid()`
+
+Give it a try yourself. 
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = color, fill = cut)) +
+  facet_wrap(vars(cut))
+```
+
+##
+
+Yay!
+
+![Yay](slide-figures/yay-2.gif)
+
+## The pressure dataset
+
+```{r}
+pressure
+```
+
+## Our third plot
+
+```{r, echo = FALSE}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, y = pressure, fill = pressure)) +
+  labs(#title = "Vapor pressure of mercury ", 
+       # subtitle = "Data for 19 temperatures", 
+       caption = "Source: Weast (1973)", 
+       x = "Temperature (ºC)", 
+       y = "Pressure (mm of Hg)", 
+       tag = "(a)", 
+       fill = "Pressure") 
+
+```
+
+## 
+
+This doesn't work...
+
+```{r, error = TRUE, fig.keep='none'}
+ggplot(data = pressure) +
+  geom_bar(mapping = aes(x = temperature, 
+                         y = pressure, 
+                         fill = pressure))
+```
+
+**Why?**
+
+## 
+
+```{r}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, 
+                         y = pressure, 
+                         fill = pressure))
+```
+
+##
+
+```{r, echo = FALSE}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, y = pressure, fill = pressure)) +
+  labs(#title = "Vapor pressure of mercury ", 
+       # subtitle = "Data for 19 temperatures", 
+       caption = "Source: Weast (1973)", 
+       x = "Temperature (ºC)", 
+       y = "Pressure (mm of Hg)", 
+       tag = "(a)", 
+       fill = "Pressure") 
+
+```
+
+## Labels
+
+Critical for making plots accessible and publication ready
+
+## 
+
+A labelled empty plot
+
+<div class="container">
+<div class="col">
+```{r, eval = F, fig.width=5, fig.height=5}
+ggplot() +
+  labs(title = "The title", 
+       subtitle = "The subtitle", 
+       caption = "The caption", 
+       x = "The x axis", 
+       y = "The y axis", 
+       tag = "TAG")
+```
+</div>
+<div class="col">
+```{r, echo = F, fig.width=5, fig.height=5}
+ggplot() +
+  labs(title = "The title", 
+       subtitle = "The subtitle", 
+       caption = "The caption", 
+       x = "The x axis", 
+       y = "The y axis", 
+       tag = "TAG")
+```
+</div>
+</div>
+
+## LABELS
+
+> - **title** & **subtitle**: explain main findings (presentations!)
+> - **caption**: extra info, usually source
+> - **tag**: identify between multiple plots
+> - **aesthetics**: title for `x`, `y`, `fill`, or any other aesthetic
+
+##
+
+```{r, echo = FALSE}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, y = pressure, fill = pressure)) +
+  labs(caption = "Source: Weast (1973)", 
+       x = "Temperature (ºC)", 
+       y = "Pressure (mm of Hg)", 
+       tag = "(a)", 
+       fill = "Pressure") 
+
+```
+
+##
+
+```{r, echo = TRUE}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, y = pressure, fill = pressure)) +
+  labs(caption = "Source: Weast (1973)", 
+       x = "Temperature (ºC)", 
+       y = "Pressure (mm of Hg)", 
+       tag = "(a)", 
+       fill = "Pressure") 
+
+```
+
+## 
+
+```{r, echo = FALSE, fig.height=6}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, y = pressure, fill = pressure)) +
+  labs(title = "Pressure raises exponentially with temperature", 
+       subtitle = "Vapor pressure of mercury for 19 temperatures", 
+       caption = "Source: Weast (1973)", 
+       x = "Temperature (ºC)", 
+       y = "Pressure (mm of Hg)",
+       fill = "Pressure") +
+  theme(plot.title =  element_text(size = 20, face = "bold"), 
+        plot.subtitle = element_text(margin = margin(b = 20)))
+
+```
+
+## 
+
+Yay!
+
+![Yay](slide-figures/yay-3.gif)
+
+# Histograms
+
+## {data-background-iframe="https://player.vimeo.com/video/221607341"}
+
+## Our fourth plot
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price), 
+                 binwidth = 1000,
+                 colour = "black", position = "stack",boundary = 0, 
+                 fill = "white")
+```
+
+##
+
+We're gonna use `geom_histogram()` and 
+
+Check your cheatsheet!
+
+## 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price))
+```
+
+## 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = price), binwidth = 10)
+```
+
+## 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = price), binwidth = 10000)
+```
+
+## 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = price), binwidth = 1000)
+```
+
+## 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = price), binwidth = 1000, boundary = 0)
+```
+
+## 
+
+Now the color and the fill aesthetic. 
+
+Give it a try!
+
+##
+
+When aesthetics do not depend on data they are placed **outside** the mapping argument. 
+
+## 
+
+<div class="container">
+<div class="col">
+```{r, fig.width=5, fig.height=5, warning=FALSE, message=FALSE}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price, 
+                     color = "black"))
+```
+</div>
+<div class="col">
+```{r, fig.width=5, fig.height=5, warning=FALSE, message=FALSE}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price), 
+                 color = "black")
+```
+</div>
+</div>
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price), binwidth = 1000, boundary = 0, 
+                 color = "black", fill = "white")
+```
+

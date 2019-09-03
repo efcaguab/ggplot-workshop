@@ -1,0 +1,14 @@
+.green .reveal .state-background {
+  background: rgb(229,246,220);
+} 
+
+.reveal section img{
+  border:0;
+}
+
+.container{
+    display: flex;
+}
+.col{
+    flex: 1;
+}
