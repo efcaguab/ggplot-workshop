@@ -55,6 +55,30 @@ knitr::opts_chunk$set(fig.height=4,
 1. Explain the basics components
 2. Build knowledge through **examples**
 
+## TODAY
+
+> - We'll learn to plot distributions of one variables (barplots, histograms, density)
+> - We'll learn to facet plots
+> - We'll learn to work with continuous and discrete scales (colors, fills, position)
+> - We'll learn to add labels to our plots (for papers or publications)
+
+## NEXT TIME
+
+If there is interest:
+
+> - We'll learn to plot two variables (boxplots and scatterplots)
+> - We'll learn to zoom in graphs 
+> - We'll learn to customize the looks of the plot (theme)
+> - We'll learn the best ways to save plots so they can be inserted in reports
+
+## 
+
+Even more interest:
+
+> - Lines, polygons, basic maps and big data
+> - Customize legends
+> - Put multiple plots together for a paper (a, b, c)
+
 # The grammar of graphics
 
 ##
@@ -530,7 +554,7 @@ ggplot(data = diamonds) +
 ggplot(data = diamonds) +
   geom_density(aes(x = price, fill = cut), 
                  colour = "black", position = "stack") +
-  scale_fill_brewer(palette = "Greens")
+  scale_fill_brewer(palette = "Greens", direction = -1)
 ```
 
 ##
@@ -570,8 +594,27 @@ We can see them better using `position = "stack"`
 ```{r}
 ggplot(data = diamonds) +
   geom_density(aes(x = price, fill = cut), 
-                 position = "stack")
+                 position = "stack") 
 ```
+
+## PLOTS ARE OBJECTS TOO
+
+We can save plots assigning them to a variable in R
+
+```{r}
+plot4 <- ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 position = "stack") 
+```
+
+## 
+
+We can then render them and add on stuff by calling the variable
+
+```{r}
+plot4
+```
+
 
 ## SCALES
 
@@ -587,7 +630,7 @@ How many **scales** you see in this plot? What are they?
 ggplot(data = diamonds) +
   geom_density(aes(x = price, fill = cut), 
                  colour = "black", position = "stack") +
-  scale_fill_brewer(palette = "Greens")
+  scale_fill_brewer(palette = "Greens", direction = -1)
 ```
 
 ##
@@ -596,7 +639,7 @@ ggplot(data = diamonds) +
 ggplot(data = diamonds) +
   geom_density(aes(x = price, fill = cut), 
                  colour = "black", position = "stack") +
-  scale_fill_brewer(palette = "Greens")
+  scale_fill_brewer(palette = "Greens", direction = -1)
 ```
 
 > - 1 linear continuous for **position x**
@@ -612,9 +655,9 @@ ggplot(data = pressure) +
                          fill = pressure))
 ```
 
-> - 1 linear continuous for **position x**, 
-> - 1 linear continuous for **position y**, 
-> - 1 linear continuous for **fill**
+- 1 linear continuous for **position x**, 
+- 1 linear continuous for **position y**, 
+- 1 linear continuous for **fill**
 
 ## 
 
@@ -623,7 +666,304 @@ ggplot(data = diamonds) +
   geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")
 ```
 
-> - 1 discrete for **position x**
-> - 1 linear continuous for **position y**
-> - 1 discrete for **fill**
+- 1 discrete for **position x**
+- 1 linear continuous for **position y**
+- 1 discrete for **fill**
 
+##
+
+To change the filling colors we need to change the **discrete** scale for **fill**
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 colour = "black", position = "stack") +
+  scale_fill_brewer(palette = "Greens", direction = -1)
+```
+
+## DISCRETE FILL SCALES
+
+In `ggplot` we have multiple options for discrete scales of fill (or colour)
+
+##
+
+`scale_fill_viridis_d()` The default - based on the viridis scales
+
+Viridis scales are good: colourblind safe, perceptually uniform, look OK in black and white
+
+
+##
+
+`scale_fill_viridis_d()` The default - based on the viridis scales
+
+```{r}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 position = "stack")  + 
+  scale_fill_viridis_d()
+```
+
+## 
+
+remember plots are objects too so we can add layers 
+
+<div class="container">
+<div class="col">
+```{r, fig.height=3, fig.width=5}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 position = "stack")  + 
+  scale_fill_viridis_d()
+```
+</div>
+<div class="col">
+```{r, fig.height=3, fig.width=5}
+plot4 <- ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 position = "stack")
+plot4 + scale_fill_viridis_d()
+```
+</div>
+</div>
+
+## 
+
+`scale_fill_viridis_d()` has five options. The default is "D"
+
+<div class="container">
+<div class="col">
+```{r, fig.height=4, fig.width=5}
+plot4 + 
+  scale_fill_viridis_d(option = "A")
+```
+</div>
+<div class="col">
+```{r, fig.height=4, fig.width=5}
+plot4 + 
+  scale_fill_viridis_d(option = "E")
+```
+</div>
+</div>
+
+##
+
+`scale_fill_hue()` used to be the default 
+
+Maps each level to an evenly spaced hue on the colour wheel. It does not generate colour-blind safe palettes.
+
+##
+
+```{r}
+plot4 + 
+  scale_fill_hue()
+```
+
+
+##
+
+`scale_fill_brewer()` Is another good one - based on ColorBrewer
+
+Originally designed for cartography, but look awesome in all kinds of plots
+
+##
+
+![Brewer Palettes](slide-figures/color-brewer-palettes.jpg)
+
+##
+
+<div class="container">
+<div class="col">
+```{r, fig.height=4, fig.width=5}
+plot4 + 
+  scale_fill_brewer(palette = "Purples")
+```
+</div>
+<div class="col">
+```{r, fig.height=4, fig.width=5}
+plot4 + 
+  scale_fill_brewer(palette = "YlGn")
+```
+</div>
+</div>
+
+##
+
+Our fifth plot uses the "Greens" palette of color brewer... Try it yourself
+
+## 
+
+What happens if you add the argument `direction = -1` inside `scale_fill_brewer()`?
+
+```{r, echo= FALSE}
+plot4 +
+  scale_fill_brewer(palette = "Greens", direction = -1)
+```
+
+## BONUS SCALE
+
+`scale_fill_manual()` can be used to define your very own colour pallete
+
+##
+
+```{r}
+really_ugly_colors <- c("yellow", "blue", "red", "white", "green")
+plot4 + scale_fill_manual(values = really_ugly_colors)
+```
+
+## 
+
+Yay!
+
+![Yay](slide-figures/yay-4.gif)
+
+## BONUS PLOT: Our sixth plot
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+cut_values <- c("Worst", "Bad", "Average", "Good", "Best")
+library(scales)
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds", 
+                    name = NULL,
+                    labels = cut_values) +
+  scale_x_discrete(labels = cut_values, name = "Cut") +
+  scale_y_continuous(labels = unit_format(scale = 1/1000, unit = ""), breaks = seq(0, 100000, by = 2000), name = "Count (thousands)")
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds")
+```
+
+## 
+
+Remember: **scales** map values in the data space to values in the aesthetic space (color, fill, size, position, shape ...)
+
+So, scales also help us define breaks and labels
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds") +
+  scale_y_continuous(breaks = c(1000, 10000, 20000))
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds") +
+  scale_y_continuous(breaks = c(1000, 10000, 20000), 
+                     labels = c("one thousand", "ten thousand", "twenty thousand"))
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 2000))
+```
+
+## 
+
+If I want to change the labels by hand, and there are lots of labels it can be a pain in the ass
+
+We will use the `scales` package
+
+```{r, message=FALSE, warning=FALSE}
+library(scales)
+```
+
+> - percentages
+> - scientific
+> - units
+> - dates
+> - dollar, ...
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 2000), 
+                     labels = unit_format(scale = 1/1000, unit = "thousand"))
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 2000), 
+                     labels = unit_format(scale = 1/1000, unit = ""))
+```
+
+## 
+
+Now let's do different labels for the **fill** scale and the **x** discrete scale
+
+```{r}
+cut_values <- c("Worst", "Bad", "Average", "Good", "Best")
+```
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds", 
+                    labels = cut_values) +
+  scale_x_discrete(labels = cut_values) +
+  scale_y_continuous(labels = unit_format(scale = 1/1000, unit = ""), 
+                     breaks = seq(0, 30000, by = 2000))
+```
+
+## 
+
+Now we just need to change the names of the scales
+
+We did that before using `labs()`. But we can also do it within the scales as well
+
+##
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds", 
+                    labels = cut_values, 
+                    name = NULL) +
+  scale_x_discrete(labels = cut_values, name = "Cut") +
+  scale_y_continuous(labels = unit_format(scale = 1/1000, unit = ""), 
+                     breaks = seq(0, 30000, by = 2000), 
+                     name = "Count (thousands)")
+```
+
+##
+
+Yay!
+
+![Yay](slide-figures/yay-5.gif)
+
+## NEXT TIME
+
+If there is interest:
+
+> - We'll learn to plot two variables (boxplots and scatterplots)
+> - We'll learn to zoom in graphs 
+> - We'll learn to customize the looks of the plot (theme)
+> - We'll learn to use logarithmic scales
+> - We'll learn the best ways to save plots so they can be inserted in reports
+
+## 
+
+Or... check out this excellent online tutorial https://rstudio.cloud/learn/primers/3
