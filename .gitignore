@@ -2,4 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-intro-slides_cache
+*_cache
+*_files
