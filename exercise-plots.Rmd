@@ -1,0 +1,84 @@
+---
+title: "Exercise plots"
+author: "Fernando Cagua"
+date: "September 4, 2019"
+output:
+  revealjs::revealjs_presentation:
+    theme: white
+    transition: fade
+    css: custom.css
+    center: true
+    self_contained: true
+    reveal_options:
+      slideNumber: true
+      previewLinks: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(fig.height=4, 
+                      cache = TRUE)
+```
+
+## Our first plot
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")
+```
+
+## Our second plot
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = color, fill = cut)) +
+  facet_wrap(vars(cut))
+```
+
+## Our third plot
+
+```{r, echo = FALSE}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, y = pressure, fill = pressure)) +
+  labs(#title = "Vapor pressure of mercury ", 
+       # subtitle = "Data for 19 temperatures", 
+       caption = "Source: Weast (1973)", 
+       x = "Temperature (ºC)", 
+       y = "Pressure (mm of Hg)", 
+       tag = "(a)", 
+       fill = "Pressure") 
+
+```
+
+## Our fourth plot
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price), 
+                 binwidth = 1000,
+                 colour = "black", position = "stack",boundary = 0, 
+                 fill = "white")
+```
+
+## Our fifth plot
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 colour = "black", position = "stack") +
+  scale_fill_brewer(palette = "Greens", direction = -1)
+```
+
+## BONUS PLOT: Our sixth plot
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+cut_values <- c("Worst", "Bad", "Average", "Good", "Best")
+library(scales)
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) +
+  scale_fill_brewer(palette = "Reds", 
+                    name = NULL,
+                    labels = cut_values) +
+  scale_x_discrete(labels = cut_values, name = "Cut") +
+  scale_y_continuous(labels = unit_format(scale = 1/1000, unit = ""), breaks = seq(0, 100000, by = 2000), name = "Count (thousands)")
+```
