@@ -8,7 +8,7 @@ output:
     transition: fade
     css: custom.css
     center: true
-    self_contained: false
+    self_contained: true
     reveal_options:
       slideNumber: true
       previewLinks: true
