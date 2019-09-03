@@ -401,7 +401,6 @@ ggplot(data = pressure) +
        y = "Pressure (mm of Hg)", 
        tag = "(a)", 
        fill = "Pressure") 
-
 ```
 
 ##
@@ -494,12 +493,6 @@ ggplot(data = diamonds) +
   geom_histogram(mapping = aes(x = price), binwidth = 1000, boundary = 0)
 ```
 
-## 
-
-Now the color and the fill aesthetic. 
-
-Give it a try!
-
 ##
 
 When aesthetics do not depend on data they are placed **outside** the mapping argument. 
@@ -530,4 +523,107 @@ ggplot(data = diamonds) +
   geom_histogram(aes(x = price), binwidth = 1000, boundary = 0, 
                  color = "black", fill = "white")
 ```
+
+## Our fifth plot
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 colour = "black", position = "stack") +
+  scale_fill_brewer(palette = "Greens")
+```
+
+##
+
+We can use `geom_density()` as an alternative to `geom_histogram()`
+
+<div class="container">
+<div class="col">
+```{r, fig.width=5, fig.height=5, warning=FALSE, message=FALSE}
+ggplot(data = diamonds) +
+  geom_histogram(aes(x = price))
+```
+</div>
+<div class="col">
+```{r, fig.width=5, fig.height=5, warning=FALSE, message=FALSE}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price))
+```
+</div>
+</div>
+
+## 
+
+**fill** by *cut*
+
+```{r}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut))
+```
+
+But it has the wrong positioning...
+
+## 
+
+We can see them better using `position = "stack"`
+
+```{r}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 position = "stack")
+```
+
+## SCALES
+
+> - **scales** map values in the data space to values in the aesthetic space (color, fill, size, position, shape ...)
+> - You can see scales in the **axes** or the **legends**
+> - Basically scales, determine how the geom looks
+
+##
+
+How many **scales** you see in this plot? What are they?
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 colour = "black", position = "stack") +
+  scale_fill_brewer(palette = "Greens")
+```
+
+##
+
+```{r, echo= FALSE}
+ggplot(data = diamonds) +
+  geom_density(aes(x = price, fill = cut), 
+                 colour = "black", position = "stack") +
+  scale_fill_brewer(palette = "Greens")
+```
+
+> - 1 linear continuous for **position x**
+> - 1 linear continuous for **position y**
+> - 1 discrete for **fill**
+
+##
+
+```{r echo = FALSE}
+ggplot(data = pressure) +
+  geom_col(mapping = aes(x = temperature, 
+                         y = pressure, 
+                         fill = pressure))
+```
+
+> - 1 linear continuous for **position x**, 
+> - 1 linear continuous for **position y**, 
+> - 1 linear continuous for **fill**
+
+## 
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")
+```
+
+> - 1 discrete for **position x**
+> - 1 linear continuous for **position y**
+> - 1 discrete for **fill**
 
